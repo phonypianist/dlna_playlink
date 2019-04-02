@@ -5,14 +5,33 @@
 {% for container in containers %}
 <div class="media">
   <img src="{{container.image_uri}}" class="mr-3" width="64" height="64">
-  <h5 class="mt-0"><a href="{{path}}?url={{url | urlencode}}&amp;serviceType={{service_type | urlencode}}&amp;containerId={{container.container_id}}">{{container.title}}</a></h5>
+  <h5 class="mt-0"><a href="{{path}}?uri={{uri | urlencode}}&amp;serviceType={{service_type | urlencode}}&amp;containerId={{container.container_id}}">{{container.title}}</a></h5>
 </div>
 {% endfor %}
 
 {% for item in items %}
-<div class="media">
-  <h5 class="mt-0"><a href="{{path}}?url={{url | urlencode}}&amp;itemId={{container.item_id}}">{{item.title}}</a></h5>
+<div class="list-group">
+  <div style="display: flex; align-items: center">
+    <a class="list-group-item list-group-item-action file-item" href="#" data-item-id="{{item.item_id}}">{{item.title}}</a>
+    <div class="dropdown">
+      <a id="optionMenu{{item.track_number}}" role="button" class="btn btn-light dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+      <div class="dropdown-menu" aria-labelledby="optionMenu{{item.track_number}}">
+        <a class="dropdown-item" href="#">Properties</a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endfor %}
+
+<script type="text/javascript">
+  $(function() {
+    $('a.file-item').click(function(e) {
+      $this = $(this);
+      $.post('/play/direct', );
+      console.log($this.data('item-id'));
+      return false;
+    });
+  });
+</script>
 
 {% endblock %}

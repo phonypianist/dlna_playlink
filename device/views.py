@@ -21,13 +21,13 @@ class ContentsView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = super(ContentsView, self).get_context_data(**kwargs)
-        url = request.GET.get('url')
+        uri = request.GET.get('uri')
         service_type = request.GET.get('serviceType')
         container_id = request.GET.get('containerId')
         if not container_id:
             container_id = 0
-        containers = ContentsModel().get(url, service_type, container_id)
-        context['url'] = url
+        containers = ContentsModel().search(uri, service_type, container_id)
+        context['uri'] = uri
         context['service_type'] = service_type
         context['containers'] = containers['containers']
         context['items'] = containers['items']

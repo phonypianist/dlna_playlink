@@ -85,7 +85,7 @@ class ContentsModel:
 
     __BLANK_IMAGE_URI = '/static/images/blank.png'
 
-    def get(self, url, service_type, object_id):
+    def search(self, url, service_type, object_id):
         headers = {
             'Content-Type': 'text/xml; charset=utf-8',
             'SOAPAction': '"urn:schemas-upnp-org:service:ContentDirectory:1#Browse"'
@@ -114,7 +114,6 @@ class ContentsModel:
             with urllib.request.urlopen(req) as response:
                 response_body = response.read().decode('utf-8')
 
-            print(response_body)
             root = ET.fromstring(response_body)
             result = root.find('.//Result').text
             if result:
@@ -137,8 +136,22 @@ class ContentsModel:
                 for item in didl_root.findall('.//item'):
                     item_id = item.get('id')
                     title_element = item.find('title')
+                    track_number_element = item.find('originalTrackNumber')
+                    creator_element = item.find('creator')
+                    genre_element = item.find('genre')
+                    album_element = item.find('album')
+                    artist_element = item.find('artist')
                     res_element = item.find('res')
-                    items.append(Item(item_id, title_element.text, res_element.text))
+                    protocol_info = res_element.get('protocolInfo')
+                    items.append(Item(item_id=item_id,
+                                      title=title_element.text,
+                                      track_number=track_number_element.text,
+                                      creator=creator_element.text,
+                                      genre=genre_element.text,
+                                      album=album_element.text,
+                                      artist=artist_element.text,
+                                      uri=res_element.text,
+                                      mime_type=protocol_info.split(':')[2]))
 
             total = int(root.find('.//TotalMatches').text)
             starting_index += int(root.find('.//NumberReturned').text)
@@ -153,10 +166,6 @@ class ContentsModel:
 
 class Container:
 
-    container_id = ''
-    title = ''
-    image_uri = ''
-
     def __init__(self, container_id, title, image_uri):
         self.container_id = container_id
         self.title = title
@@ -165,14 +174,16 @@ class Container:
 
 class Item:
 
-    item_id = ''
-    title = ''
-    uri = ''
-
-    def __init__(self, item_id, title, uri):
+    def __init__(self, item_id, title, track_number, creator, genre, album, artist, uri, mime_type):
         self.item_id = item_id
         self.title = title
+        self.track_number = track_number
+        self.creator = creator
+        self.genre = genre
+        self.album = album
+        self.artist = artist
         self.uri = uri
+        self.mime_type = mime_type
 
 
 def parse_xml_without_namespace(xml_text):

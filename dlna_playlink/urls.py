@@ -17,10 +17,13 @@ from django.contrib import admin
 from django.urls import path
 
 import device.views as devicesearch_view
+import play.views as play_view
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('devices/', devicesearch_view.DeviceSearchView.as_view()),
     path('devices/<path>', devicesearch_view.ContentsView.as_view()),
+    path('play/', play_view.DirectPlayView.as_view()),
+    path('play/direct', play_view.DirectPlayView.as_view()),
 ]

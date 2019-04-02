@@ -7,6 +7,7 @@ class Playlist(models.Model):
     """
 
     name = models.CharField('Playlist name', max_length=128)
+    direct = models.BooleanField('Direct play')
 
     def __str__(self):
         return self.name
@@ -19,8 +20,8 @@ class PlaylistItem(models.Model):
 
     playlist = models.ForeignKey(Playlist, verbose_name='Playlist', related_name='playlist_items',
                                  on_delete=models.CASCADE)
-    title = models.CharField('Title')
-    uri = models.CharField('URI')
+    title = models.CharField('Title', max_length=256)
+    uri = models.CharField('URI', max_length=1024)
 
     def __str__(self):
         return self.title

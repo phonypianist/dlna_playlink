@@ -4,7 +4,7 @@
 
 {% for device in devices %}
 <div class="media">
-  <h5 class="mt-0"><a href="{{device.udn}}?url={{device.location | urlencode}}&amp;serviceType={{device.service_type | urlencode}}">{{device.name}}</a></h5>
+  <h5 class="mt-0"><a href="{{device.udn}}?uri={{device.location | urlencode}}&amp;serviceType={{device.service_type | urlencode}}">{{device.name}}</a></h5>
 </div>
 {% endfor %}
 
